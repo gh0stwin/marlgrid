@@ -4,6 +4,7 @@ from .empty import EmptyMultiGrid
 from .doorkey import DoorKeyEnv
 from .cluttered import ClutteredMultiGrid
 from .goalcycle import ClutteredGoalCycleEnv
+from .open_doors import OpenDoorsMultiGrid
 from .viz_test import VisibilityTestEnv
 
 from ..agents import GridAgentInterface
