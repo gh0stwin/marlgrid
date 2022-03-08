@@ -290,54 +290,58 @@ class GridAgentInterface(GridAgent):
     def process_vis(self, opacity_grid):
         assert len(opacity_grid.shape) == 2
         if not self.see_through_walls:
-            return occlude_mask(~opacity_grid, self.get_view_pos())
+            return occlude_mask(opacity_grid, self.get_view_pos())
         else:
             return np.full(opacity_grid.shape, 1, dtype=np.bool)
-    
+
+
+@numba.njit
+def bresenham_line(begin, end):
+    dx = abs(end[0] - begin[0])
+    inc_x = 1 if begin[0] < end[0] else -1
+    dy = -abs(end[1] - begin[1])
+    inc_y = 1 if begin[1] < end[1] else -1
+    error = dx + dy
+    line = np.empty((0, 2), np.int32)
+
+    while True:
+        line = np.concatenate((line, begin.copy().reshape(1, 2)))
+
+        if np.all(begin == end):
+            break
+
+        double_error = 2 * error
+
+        if double_error >= dy:
+            if begin[0] == end[0]:
+                break
+
+            error += dy
+            begin[0] += inc_x
+
+        if double_error <= dx:
+            if begin[1] == end[1]:
+                break
+
+            error += dx
+            begin[1] += inc_y
+
+    return line
+
 
 @numba.njit
 def occlude_mask(grid, agent_pos):
+    agent_pos = np.array(agent_pos, dtype=np.int32)
     mask = np.zeros(grid.shape[:2]).astype(numba.boolean)
-    mask[agent_pos[0], agent_pos[1]] = True
-    width, height = grid.shape[:2]
 
-    for j in range(agent_pos[1]+1,0,-1):
-        for i in range(agent_pos[0], width):
-            if mask[i,j] and grid[i,j]:
-                if i < width - 1:
-                    mask[i + 1, j] = True
-                if j > 0:
-                    mask[i, j - 1] = True
-                    if i < width - 1:
-                        mask[i + 1, j - 1] = True
+    for i in range(grid.shape[0]):
+        for j in range(grid.shape[1]):
+            mask[i, j] = True
+            line = bresenham_line(np.copy(agent_pos), np.array([i, j], dtype=np.int32))
 
-        for i in range(agent_pos[0]+1,0,-1):
-            if mask[i,j] and grid[i,j]:    
-                if i > 0:
-                    mask[i - 1, j] = True
-                if j > 0:
-                    mask[i, j - 1] = True
-                    if i > 0:
-                        mask[i - 1, j - 1] = True
+            for k in range(1, len(line) - 1):
+                if grid[line[k, 0], line[k, 1]] == False:
+                    mask[i, j] = False
+                    break
 
-
-    for j in range(agent_pos[1], height):
-        for i in range(agent_pos[0], width):
-            if mask[i,j] and grid[i,j]:
-                if i < width - 1:
-                    mask[i + 1, j] = True
-                if j < height-1:
-                    mask[i, j + 1] = True
-                    if i < width - 1:
-                        mask[i + 1, j + 1] = True
-
-        for i in range(agent_pos[0]+1,0,-1):
-            if mask[i,j] and grid[i,j]:
-                if i > 0:
-                    mask[i - 1, j] = True
-                if j < height-1:
-                    mask[i, j + 1] = True
-                    if i > 0:
-                        mask[i - 1, j + 1] = True
-                    
     return mask
