@@ -10,7 +10,6 @@ import warnings
 
 from .objects import WorldObj, Wall, Goal, Lava, GridAgent, BonusTile, BulkObj, COLORS
 from .agents import GridAgentInterface
-from .rendering import SimpleImageViewer
 from gym_minigrid.rendering import fill_coords, point_in_rect, downsample, highlight_img
 
 TILE_PIXELS = 32
@@ -103,7 +102,7 @@ class MultiGrid:
     @property
     def opacity(self):
         transparent_fun = np.vectorize(lambda k: (self.obj_reg.key_to_obj_map[k].see_behind() if hasattr(self.obj_reg.key_to_obj_map[k], 'see_behind') else True))
-        return ~transparent_fun(self.grid)
+        return transparent_fun(self.grid)
 
     def __getitem__(self, *args, **kwargs):
         return self.__class__(
@@ -733,6 +732,7 @@ class MultiGridEnv(gym.Env):
             return
 
         if mode == "human" and not self.window:
+            from .rendering import SimpleImageViewer
             # from gym.envs.classic_control.rendering import SimpleImageViewer
 
             self.window = SimpleImageViewer(caption="Marlgrid")
