@@ -11,10 +11,10 @@ class GridAgentInterface(GridAgent):
         left = 0  # Rotate left
         right = 1  # Rotate right
         forward = 2  # Move forward
-        pickup = 3  # Pick up an object
-        drop = 4  # Drop an object
-        toggle = 5  # Toggle/activate an object
-        done = 6  # Done completing task
+        toggle = 3  # Toggle/activate an object
+        done = 4  # Done completing task
+        pickup = 5  # Pick up an object
+        drop = 6  # Drop an object
 
     def __init__(
             self,
@@ -25,7 +25,7 @@ class GridAgentInterface(GridAgent):
             observe_rewards=False,
             observe_position=False,
             observe_orientation=False,
-            restrict_actions=False,
+            restrict_actions=None,
             see_through_walls=False,
             hide_item_types=[],
             prestige_beta=0.95,
@@ -78,7 +78,7 @@ class GridAgentInterface(GridAgent):
             raise ValueError(f"{self.__class__.__name__} kwarg 'observation_style' must be one of 'image', 'rich'.")
 
         if self.restrict_actions:
-            self.action_space = gym.spaces.Discrete(3)
+            self.action_space = gym.spaces.Discrete(self.restrict_actions)
         else:
             self.action_space = gym.spaces.Discrete(len(self.actions))
 
