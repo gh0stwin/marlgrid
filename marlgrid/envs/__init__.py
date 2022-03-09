@@ -26,6 +26,7 @@ def register_marl_env(
     view_size,
     view_tile_size=8,
     view_offset=0,
+    restrict_actions=None,
     agent_color=None,
     env_kwargs={},
 ):
@@ -42,6 +43,7 @@ def register_marl_env(
                         view_size=view_size,
                         view_tile_size=8,
                         view_offset=view_offset,
+                        restrict_actions=restrict_actions
                         )
                     for c in colors[:n_agents]
                 ],
