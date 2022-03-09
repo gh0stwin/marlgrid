@@ -122,7 +122,7 @@ register_marl_env(
 )
 
 register_marl_env(
-    "OpenDoors-agent3-view5-11xx11",
+    "OpenDoors-agent3-view5-11xx11-v0",
     OpenDoorsMultiGrid,
     n_agents=3,
     grid_size=11,
