@@ -357,7 +357,6 @@ class MultiGridEnv(gym.Env):
         self.height = height
         self.max_steps = max_steps
         self.reward_decay = reward_decay
-        self.seed(seed=seed)
         self.agent_spawn_kwargs = agent_spawn_kwargs
         self.ghost_mode = ghost_mode
 
