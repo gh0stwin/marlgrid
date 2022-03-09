@@ -129,4 +129,5 @@ register_marl_env(
     n_agents=3,
     grid_size=11,
     view_size=5,
+    restrict_actions=4,
 )
