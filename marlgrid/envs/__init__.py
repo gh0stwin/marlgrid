@@ -120,3 +120,11 @@ register_marl_env(
         'n_bonus_tiles': 3
     }
 )
+
+register_marl_env(
+    "OpenDoors-agent3-view5-11xx11",
+    OpenDoorsMultiGrid,
+    n_agents=3,
+    grid_size=11,
+    view_size=5,
+)
