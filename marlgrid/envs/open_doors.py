@@ -1,3 +1,5 @@
+import numpy as np
+
 from marlgrid.base import MultiGrid, MultiGridEnv
 from marlgrid.objects import Door
 
@@ -47,7 +49,7 @@ class OpenDoorsMultiGrid(MultiGridEnv):
             done = True
             step_rewards = [1 for _ in range(self.num_agents)]
 
-        return obs, step_rewards, done, info
+        return np.stack(obs), np.array(step_rewards), done, info
 
     def _doors_opened_by_order(self, doors):
         seen_closed_door = False
