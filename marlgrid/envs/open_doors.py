@@ -38,7 +38,7 @@ class OpenDoorsMultiGrid(MultiGridEnv):
         self.place_agents()
         
     def reset(self, **kwargs):
-        obs = super().reset(kwargs)
+        obs = super().reset(**kwargs)
         return np.stack(obs)
     
     def step(self, actions):
