@@ -328,36 +328,36 @@ class Ball(WorldObj):
 
 class Door(WorldObj):
     def can_overlap(self):
-        return self.state == DOOR_STATES.open# and self.agent is None  # is open
+        return self.state == DOOR_STATE.open# and self.agent is None  # is open
 
     def see_behind(self):
-        return self.state == DOOR_STATES.open  # is open
+        return self.state == DOOR_STATE.open  # is open
 
     def toggle(self, agent, pos):
-        if self.state == DOOR_STATES.locked:  # is locked
+        if self.state == DOOR_STATE.locked:  # is locked
             # If the agent is carrying a key of matching color
             if (
                 agent.carrying is not None
                 and isinstance(agent.carrying, Key)
                 and agent.carrying.color == self.color
             ):
-                self.state = DOOR_STATES.closed
-        elif self.state == DOOR_STATES.closed:  # is unlocked but closed
-            self.state = DOOR_STATES.open
-        elif self.state == DOOR_STATES.open:  # is open
-            self.state = DOOR_STATES.closed
+                self.state = DOOR_STATE.closed
+        elif self.state == DOOR_STATE.closed:  # is unlocked but closed
+            self.state = DOOR_STATE.open
+        elif self.state == DOOR_STATE.open:  # is open
+            self.state = DOOR_STATE.closed
         return True
 
     def render(self, img):
         c = COLORS[self.color]
 
-        if self.state == DOOR_STATES.open:
+        if self.state == DOOR_STATE.open:
             fill_coords(img, point_in_rect(0.88, 1.00, 0.00, 1.00), c)
             fill_coords(img, point_in_rect(0.92, 0.96, 0.04, 0.96), (0, 0, 0))
             return
 
         # Door frame and door
-        if self.state == DOOR_STATES.locked:
+        if self.state == DOOR_STATE.locked:
             fill_coords(img, point_in_rect(0.00, 1.00, 0.00, 1.00), c)
             fill_coords(img, point_in_rect(0.06, 0.94, 0.06, 0.94), 0.45 * np.array(c))
 
