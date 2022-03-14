@@ -44,16 +44,16 @@ class OpenDoorsMultiGrid(MultiGridEnv):
     def step(self, actions):
         obs, step_rewards, done, info = super().step(actions)
         done = False
-        step_rewards = [0 for _ in range(self.num_agents)]
+        step_rewards = np.zeros(self.num_agents, dtype=float)
         doors_state = [door.state == Door.states.open for door in self.doors]
 
         if self._doors_opened_by_order(doors_state) is False:
             done = True
         elif all(doors_state):
             done = True
-            step_rewards = [1 for _ in range(self.num_agents)]
+            step_rewards += 1
 
-        return np.stack(obs), np.array(step_rewards), done, info
+        return np.stack(obs), step_rewards, done, info
 
     def _doors_opened_by_order(self, doors):
         seen_closed_door = False
@@ -66,7 +66,7 @@ class OpenDoorsMultiGrid(MultiGridEnv):
 
         return True
 
-class AgentDoor(Door):
+class SimpleDoor(Door):
     def __init__(self, color="worst", state=0):
         super().__init__(color, state)
 
@@ -75,11 +75,3 @@ class AgentDoor(Door):
 
     def can_overlap(self):
         return False
-
-    def toggle(self, agent, pos):
-        if self.state == Door.states.closed and self.color == agent.color:
-            self.state = Door.states.open
-        elif self.state == self.states.open and self.color == agent.color:
-            self.state = self.states.closed
-
-        return True
