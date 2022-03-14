@@ -131,3 +131,12 @@ register_marl_env(
     view_size=5,
     restrict_actions=4,
 )
+
+register_marl_env(
+    "OpenDoors-agent2-view3-4xx4-v0",
+    OpenDoorsMultiGrid,
+    n_agents=2,
+    grid_size=4,
+    view_size=3,
+    restrict_actions=4,
+)
