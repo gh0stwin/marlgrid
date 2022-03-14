@@ -31,7 +31,7 @@ class OpenDoorsMultiGrid(MultiGridEnv):
             else:
                 pos[0] = (side_idx - 2) * (width - 1)
 
-            door = AgentDoor(color=self.COLORS[i], state=Door.states.closed)
+            door = SimpleDoor(color=self.COLORS[i], state=Door.states.closed)
             self.doors.append(door)
             self.put_obj(door, pos[0], pos[1])
 
