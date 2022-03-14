@@ -1,7 +1,7 @@
 import numpy as np
 
 from marlgrid.base import MultiGrid, MultiGridEnv
-from marlgrid.objects import Door
+from marlgrid.objects import DOOR_STATE, Door
 
 
 class OpenDoorsMultiGrid(MultiGridEnv):
@@ -31,7 +31,7 @@ class OpenDoorsMultiGrid(MultiGridEnv):
             else:
                 pos[0] = (side_idx - 2) * (width - 1)
 
-            door = SimpleDoor(color=self.COLORS[i], state=Door.states.closed)
+            door = SimpleDoor(color=self.COLORS[i], state=DOOR_STATE.closed)
             self.doors.append(door)
             self.put_obj(door, pos[0], pos[1])
 
@@ -45,7 +45,7 @@ class OpenDoorsMultiGrid(MultiGridEnv):
         obs, step_rewards, done, info = super().step(actions)
         done = False
         step_rewards = np.zeros(self.num_agents, dtype=float)
-        doors_state = [door.state == Door.states.open for door in self.doors]
+        doors_state = [door.state == DOOR_STATE.open for door in self.doors]
 
         if self._doors_opened_by_order(doors_state) is False:
             done = True
@@ -70,8 +70,8 @@ class SimpleDoor(Door):
     def __init__(self, color="worst", state=0):
         super().__init__(color, state)
 
-        if self.state == Door.states.locked:
-            self.state = Door.states.closed
+        if self.state == DOOR_STATE.locked:
+            self.state = DOOR_STATE.closed
 
     def can_overlap(self):
         return False
