@@ -53,7 +53,7 @@ class OpenDoorsMultiGrid(MultiGridEnv):
             done = True
             step_rewards += 1
 
-        return np.stack(obs, axis=1), step_rewards, done, info
+        return np.stack(obs), step_rewards, done, info
 
     def _doors_opened_by_order(self, doors):
         seen_closed_door = False
